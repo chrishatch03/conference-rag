@@ -527,9 +527,20 @@ input:focus {
 }
 
 .panel-input input:disabled,
-.panel-input button:disabled {
+.panel-input button:disabled,
+.panel-input select:disabled {
     opacity: 0.4;
     cursor: not-allowed;
+}
+
+.panel-input select {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--surface-light);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 0.875rem;
+    min-width: 110px;
 }
 
 /* Search Results */

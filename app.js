@@ -391,6 +391,11 @@ function setSearchReady(type, ready) {
 
     if (inputEl) inputEl.disabled = !ready;
     if (btnEl) btnEl.disabled = !ready;
+    // Enable year filter for keyword panel
+    if (type === 'keyword') {
+        const yearFilter = document.getElementById('year-filter');
+        if (yearFilter) yearFilter.disabled = !ready;
+    }
 
     if (panelEl) {
         if (ready) {
@@ -416,11 +421,16 @@ async function keywordSearch() {
 
     try {
         // Search sentence_embeddings that contain the keyword (case-insensitive)
-        const { data, error } = await supabaseClient
+        const yearFilter = document.getElementById('year-filter');
+        const selectedYear = yearFilter ? yearFilter.value : '';
+        let dbQuery = supabaseClient
             .from('sentence_embeddings')
-            .select('text, talk_id, title, speaker, url')
-            .ilike('text', `%${query}%`)
-            .limit(20);
+            .select('text, talk_id, title, speaker, url, year')
+            .ilike('text', `%${query}%`);
+        if (selectedYear) {
+            dbQuery = dbQuery.eq('year', parseInt(selectedYear));
+        }
+        const { data, error } = await dbQuery.limit(20);
 
         if (error) throw new Error(`Search failed: ${error.message}`);
 
